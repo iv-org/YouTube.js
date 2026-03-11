@@ -565,6 +565,8 @@ export class JsExtractor {
     output.push(`${indent}return { ${exportedVars.join(', ')} };`);
     output.push('})({});\n');
 
+    this.analyzer.cleanup();
+
     return {
       output: output.join('\n'),
       exported: exportedVars,

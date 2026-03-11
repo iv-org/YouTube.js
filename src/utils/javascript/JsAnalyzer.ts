@@ -131,6 +131,8 @@ export class JsAnalyzer {
 
     if (!iifeBody) return;
 
+    const registeredRelatedMembers = new Map<string, Set<string>>();
+
     const registerRelatedMemberAssignment = (memberName: string, metadata: VariableMetadata) => {
       const baseNames = new Set<string>();
 
@@ -145,6 +147,14 @@ export class JsAnalyzer {
       }
 
       for (const baseName of baseNames) {
+        const seenForBase = registeredRelatedMembers.get(baseName);
+        if (seenForBase) {
+          if (seenForBase.has(memberName)) continue;
+          seenForBase.add(memberName);
+        } else {
+          registeredRelatedMembers.set(baseName, new Set([ memberName ]));
+        }
+
         const existing = this.relatedMemberAssignments.get(baseName);
         if (existing) {
           existing.push(metadata);
@@ -655,5 +665,16 @@ export class JsAnalyzer {
    */
   public getSource(): string {
     return this.source;
+  }
+
+  /**
+   * Clears the prototype alias and related member assignment maps so that
+   * the accumulated AST node references can be reclaimed by GC.
+   *
+   * Called automatically at the end of `buildScript()`.
+   */
+  public cleanup(): void {
+    this.prototypeAliasAssignments.clear();
+    this.relatedMemberAssignments.clear();
   }
 }
