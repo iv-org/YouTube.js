@@ -105,7 +105,8 @@ export const CLIENTS = {
 /**
  * The keys correspond to the `NAME` fields in {@linkcode CLIENTS} constant
  */
-export const CLIENT_NAME_IDS = {
+type ClientName = typeof CLIENTS[keyof typeof CLIENTS]['NAME'];
+export const CLIENT_NAME_IDS: Record<ClientName, string> = {
   iOS: '5',
   WEB: '1',
   MWEB: '2',
@@ -114,7 +115,7 @@ export const CLIENT_NAME_IDS = {
   ANDROID: '3',
   ANDROID_CREATOR: '14',
   ANDROID_MUSIC: '21',
-  ANDROID_TV: '28',
+  ANDROID_VR: '28',
   TVHTML5: '7',
   TVHTML5_SIMPLY: '74',
   TVHTML5_SIMPLY_EMBEDDED_PLAYER: '85',
